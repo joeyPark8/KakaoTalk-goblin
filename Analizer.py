@@ -1,3 +1,4 @@
+import os
 import webbrowser
 
 filePath = "IDON'TKNOW"
@@ -219,8 +220,13 @@ def showMostPhotoPerson():
     print({k: v for k, v in sorted(people.items(), key=lambda item: item[1])})
 
 def instruct():
+    try:
+        from urllib import pathname2url
+    except:
+        from urllib.request import pathname2url
+
     print('-'*40)
-    url = 'C:/Users/USER/Desktop/instructions/instruction.html'
+    url = 'file:{}'.format(pathname2url(os.path.abspath('instructions/instruction.html')))
     webbrowser.open(url)
 
 
