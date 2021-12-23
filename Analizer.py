@@ -24,30 +24,42 @@ f. 사진을 가장 많이 보낸 친구는 누구일까
 
 def attach():
     global filePath, attached
-    choice = input("a. 절대좌표로 연결하기 \nb. 상대좌표로 연결하기 \n \n> ")
-    if choice == 'a':
-        path = input('절대좌표: ')
-        if path[-4:] == '.txt':
-            filePath = path
-            print(filePath + "에 있는 텍스트 파일과 연결되었습니다.")
+    saveFile = open("save/saveFile.txt", 'r')
+
+    line = saveFile.readline()
+
+    if line == '':
+        filePath = input('파일 이름을 입력해 주세요: ')
+        if filePath[-4:] == '.txt':
             attached = True
+            print(filePath + ' 파일과 연결되었습니다.')
+            save(filePath)
             return
         else:
-            print("텍스트 파일을 연결해주세요.")
-            attach()
-    elif choice == 'b':
-        path = input('상대좌표: ')
-        if path[-4:-1] == '.txt':
-            filePath = open(path)
-            print(filePath + "에 있는 텍스트 파일과 연결되었습니다.")
+            print('파일 이름 또는 파일 확장자가 잘못되었습니다')
+            return
+
+    saveFile.close()
+
+    reply = input("{} 파일로 계속 하시겠습니까?(y/n) ".format(line)).lower()
+    if reply == 'y':
+        filePath = line
+        attached = True
+        print(filePath + ' 파일과 연결되었습니다.')
+        return
+    elif reply == 'n':
+        filePath = input('파일 이름을 입력해 주세요: ')
+        if filePath[-4:] == '.txt':
             attached = True
+            print(filePath + ' 파일과 연결되었습니다.')
+            save(filePath)
             return
         else:
-            print("텍스트 파일을 연결해주세요.")
-            attach()
+            print('파일 이름 또는 파일 확장자가 잘못되었습니다')
+            return
     else:
-        print("유효하지 않은 선택 입니다.")
-        attach()
+        print('유효하지 않은 선택입니다')
+        return
 
 
 def analyze():
@@ -74,6 +86,7 @@ def analyze():
         print("먼저 대화 파일과 연결해주세요")
         attach()
 
+
 def showMostChatPerson():
     global filePath
 
@@ -81,7 +94,7 @@ def showMostChatPerson():
 
     people = {}
 
-    file = open(filePath, 'r', encoding='utf-8')
+    file = open('files/' + filePath, 'r', encoding='utf-8')
     while True:
         line = file.readline()
         if not line:
@@ -98,6 +111,7 @@ def showMostChatPerson():
 
     print({k: v for k, v in sorted(people.items(), key=lambda item: item[1])})
 
+
 def countPersonChat():
     global filePath
 
@@ -107,7 +121,7 @@ def countPersonChat():
 
     name = input('누구?: ')
 
-    file = open(filePath, 'r', encoding='utf-8')
+    file = open('files/' + filePath, 'r', encoding='utf-8')
     while True:
         line = file.readline()
         if not line:
@@ -131,7 +145,7 @@ def countParicularWord():
 
     word = input('무슨 단어?: ')
 
-    file = open(filePath, 'r', encoding='utf-8')
+    file = open('files/' + filePath, 'r', encoding='utf-8')
     while True:
         line = file.readline()
         if not line:
@@ -155,7 +169,7 @@ def showMostParticularWordPerson():
 
     word = input('무슨 단어?: ')
 
-    file = open(filePath, 'r', encoding='utf-8')
+    file = open('files/' + filePath, 'r', encoding='utf-8')
     while True:
         line = file.readline()
         if not line:
@@ -180,7 +194,7 @@ def showAllParticularPersonChat():
 
     name = input('누구?: ')
 
-    file = open(filePath, 'r', encoding='utf-8')
+    file = open('files/' + filePath, 'r', encoding='utf-8')
     while True:
         line = file.readline()
         if not line:
@@ -195,6 +209,7 @@ def showAllParticularPersonChat():
                             print(i, end=' ')
                         print('\n')
 
+
 def showMostPhotoPerson():
     global filePath
 
@@ -202,7 +217,7 @@ def showMostPhotoPerson():
 
     people = {}
 
-    file = open(filePath, 'r', encoding='utf-8')
+    file = open('files/' + filePath, 'r', encoding='utf-8')
     while True:
         line = file.readline()
         if not line:
@@ -219,6 +234,7 @@ def showMostPhotoPerson():
                             people[words[5]] = 1
     print({k: v for k, v in sorted(people.items(), key=lambda item: item[1])})
 
+
 def instruct():
     try:
         from urllib import pathname2url
@@ -230,6 +246,10 @@ def instruct():
     webbrowser.open(url)
 
 
+def save(path):
+    saveFile = open("save/saveFile.txt", 'w')
+    saveFile.write(path)
+    saveFile.close()
 
 ##########################################################################################
 
